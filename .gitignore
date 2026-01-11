@@ -1,0 +1,10 @@
+/tmp
+/log
+*.log
+*.pid
+.db
+.db-journal
+/db/data.json
+/db/data.json.lock
+*.swp
+*.swo
