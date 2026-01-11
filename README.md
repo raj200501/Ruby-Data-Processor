@@ -1,54 +1,109 @@
 # Ruby Data Processor
 
-**Ruby Data Processor** is an advanced data processing service built with Ruby, designed to handle complex data workflows, real-time data ingestion, transformation, and visualization. The service leverages Ruby's robust libraries for data manipulation and provides a full-featured REST API for interaction.
+Ruby Data Processor is a pure-Ruby HTTP service for ingesting, transforming, and summarizing numeric data records.
+It exposes a REST API backed by a JSON file store, making it runnable without external dependencies.
 
 ## Features
 
-- Real-time data ingestion and processing
-- Complex data transformation workflows
-- Interactive data visualization
-- REST API for data operations
-- Robust error handling and logging
-- Scalable architecture
+- Real-time data ingestion (single record or bulk)
+- Filterable record listing
+- Summary statistics (count, min, max, average)
+- Transformation pipeline utilities
+- Health endpoint for monitoring
+- Deterministic verification via `./scripts/verify.sh`
 
-## Installation
+## Requirements
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/NicheDataProcessor.git
-    cd NicheDataProcessor
-    ```
+- Ruby 3.2.3
 
-2. Install dependencies:
-    ```bash
-    bundle install
-    ```
+## Quickstart
 
-3. Set up the database:
-    ```bash
-    rails db:create
-    rails db:migrate
-    ```
+```bash
+git clone https://github.com/your-username/Ruby-Data-Processor.git
+cd Ruby-Data-Processor
 
-4. Start the server:
-    ```bash
-    rails server
-    ```
+./scripts/run.sh
+```
+
+The server starts on `http://127.0.0.1:3000` by default.
 
 ## Usage
 
 ### API Endpoints
 
-- **GET /data**: Retrieve all data records
-- **POST /data**: Ingest new data
-- **GET /data/:id**: Retrieve a specific data record
-- **PUT /data/:id**: Update a data record
-- **DELETE /data/:id**: Delete a data record
+- `GET /health`: Health check
+- `GET /data`: Retrieve data records (supports filters)
+- `POST /data`: Ingest a new data record
+- `GET /data/:id`: Retrieve a specific data record
+- `PUT /data/:id`: Update a data record (full update)
+- `DELETE /data/:id`: Delete a data record
+- `POST /data/bulk`: Ingest multiple data records
+- `GET /data/summary`: Summary statistics for filtered records
 
-## Contributing
+### Example Requests
 
-We welcome contributions from everyone. Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+Create a record:
+
+```bash
+curl -s -X POST http://127.0.0.1:3000/data \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "data_record": {
+      "name": "Temperature",
+      "value": 22.5,
+      "source": "sensor",
+      "metadata": {"unit": "celsius"}
+    }
+  }'
+```
+
+Fetch records:
+
+```bash
+curl -s http://127.0.0.1:3000/data
+```
+
+Fetch summary statistics:
+
+```bash
+curl -s http://127.0.0.1:3000/data/summary
+```
+
+## Scripts
+
+- `./scripts/run.sh`: Run the server with sane defaults.
+- `./scripts/verify.sh`: Run unit tests and a smoke test.
+
+## Verified Quickstart
+
+The following commands were executed successfully in the repository to validate the setup:
+
+```bash
+./scripts/run.sh
+```
+
+## Verified Verification
+
+The canonical verification command is:
+
+```bash
+./scripts/verify.sh
+```
+
+This command runs Minitest unit tests and executes the smoke test that exercises the HTTP API.
+
+## Documentation
+
+- `docs/api_reference.md`: Detailed API reference with examples.
+- `docs/architecture.md`: System architecture and data flow.
+- `docs/development.md`: Local development workflow.
+- `docs/testing.md`: Testing strategy and verification.
+- `docs/troubleshooting.md`: Common issues and fixes.
+- `docs/data_workflows.md`: Data processing workflows.
+- `docs/operations.md`: Production and operations notes.
+- `docs/configuration_reference.md`: Configuration options and defaults.
+- `docs/data_store_format.md`: JSON store structure and migration notes.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
